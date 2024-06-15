@@ -5,6 +5,7 @@ import Automaton from './components/Automaton';
 function App() {
   return (
     <div className="App">
+      <h1>Conversor de Gramatica Regular para Automato</h1>
       <Form />
       <Automaton />
     </div>
