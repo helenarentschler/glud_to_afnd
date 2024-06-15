@@ -17,7 +17,7 @@ const Automaton = () => {
   }, []);
 
   return (
-    <div dangerouslySetInnerHTML={{ __html: automaton }} />
+    <div className="Diagrama" dangerouslySetInnerHTML={{ __html: automaton }} />
   );
 }
 

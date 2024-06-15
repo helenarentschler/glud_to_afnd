@@ -43,7 +43,7 @@ export default class Automaton {
         return this.transitions[state] ? this.transitions[state][symbol] || [] : [];
     }
 
-    gerarDot() {
+    generateDot() {
         let dot = `
             digraph finite_state_machine {
                 fontname="Helvetica,Arial,sans-serif";

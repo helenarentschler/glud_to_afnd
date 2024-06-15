@@ -1,4 +1,4 @@
-import Automato from "./Automaton.js"
+import Automaton from "./Automaton.js"
 
 
 export class Grammar{
@@ -11,8 +11,8 @@ export class Grammar{
     ]
     S = "S";
 
-    gerarAutomato(){
-        let automato = new Automato(this.V,this.T,this.P,this.S);
-        return automato;
+    generateAutomaton(){
+        let automaton = new Automaton(this.V,this.T,this.P,this.S);
+        return automaton;
     }
 }
