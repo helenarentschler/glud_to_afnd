@@ -1,0 +1,7 @@
+input {
+  max-width: 50px;
+}
+
+.rule {
+  display: flex;
+}
