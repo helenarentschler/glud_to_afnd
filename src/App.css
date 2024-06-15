@@ -10,10 +10,10 @@
   display: flex;
 }
 
-.Header {
+.header {
     background-color: #65727a;
 }
-.Header h1{
+.header h1{
     font-size: 30px;
     color: white;
     padding:10px;
@@ -30,12 +30,12 @@ input{
     border-radius: 5px;
     font-size: 20px;
 }
-.Container{
+.container{
     display: flex;
     margin: 30px;
     justify-content: space-between;
 }
-.Diagrama{
+.diagrama{
     min-width: 500px;
     min-height: 300px;
     margin-left: 10px;
@@ -46,10 +46,46 @@ input{
     border: 1px solid black;
     border-radius: 10px;
     font-size: 20px;
-    background-color: #d7dacf;
+    /*background-color: #d7dacf;*/
     padding: 30px;
 }
-.Sobre{
+
+.sobre{
     width: 600px;
+    min-width: 600px;
     font-size: 16px;
 }
+.sobre p{
+    text-align: justify;
+    font-size: 18px;
+    line-height: 23px;
+}
+.submit{
+    width: 200px;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px;
+    border:  1px solid black;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color: #8f9a9c;
+    color: white;
+    cursor: pointer;
+}
+
+.containerDiagrama{
+    margin: 20px;
+}
+
+.containerDef{
+    display: flex;
+    border: 1px solid black;
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+    padding: 10px;
+}
+

@@ -85,7 +85,7 @@ const Form = () => {
                 <span>S: </span>
                 <input type="text" id="S" onChange={(event) => handleChangeS(event)}/>
             </div>
-            <button type="submit">Gerar Automato</button>
+            <button className="submit" type="submit">Gerar Autômato</button>
         </form>
     )
 }

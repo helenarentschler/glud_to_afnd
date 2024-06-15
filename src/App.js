@@ -6,14 +6,15 @@ import FormalDef from './components/FormalDef';
 function App() {
   return (
     <div className="App">
-      <div className="Header">
+      <div className="header">
         <h1>Conversor de Gramática Regular para Autômato - GLUD para AFND-&#949;</h1>
       </div>
-      <div className="Container">
+      <div className="container">
         <Form/>
         <FormalDef/>
         <Sobre/> 
       </div>
+      <hr></hr>
       <Automaton/>
     </div>
   );

@@ -1,7 +1,7 @@
 
 const Sobre = () => {
     return (
-        <div className="Sobre">
+        <div className="sobre">
             <h2>Sobre</h2>
             <p>
                 Este Conversor de Gramática Regular para Autômato transforma Gramáticas Lineares Unitárias à Direita (GLUD) 
