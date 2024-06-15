@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Grammar from "../models/Grammar";
 
-const Form = () => {
+const Form = ({ setGrammar }) => {
 
     const [ G, setG ] = useState(new Grammar());
 
@@ -40,6 +40,12 @@ const Form = () => {
         newState.S = event.target.value;
         setG(newState);
     }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        setGrammar(G);
+    }
+
     return (
         <form action="">
             <h1>Gramatica</h1>
@@ -63,7 +69,12 @@ const Form = () => {
                 <span>P: {"{"}</span>
                     {G.P.map((rule, i) => (
                         <div className="rule">
-                            <input type="text" defaultValue={rule[0]} id="0" onChange={(event) => handleChangeP(i, 0, event)}/>
+                            <input 
+                                type="text" 
+                                defaultValue={rule[0]} 
+                                id="0" 
+                                onChange={(event) => handleChangeP(i, 0, event)}
+                            />
                             <span> | </span>
                             {rule.slice(1).map((el, j) => (
                                 <input 
@@ -85,7 +96,7 @@ const Form = () => {
                 <span>S: </span>
                 <input type="text" id="S" onChange={(event) => handleChangeS(event)}/>
             </div>
-            <button type="submit">Gerar Automato</button>
+            <button type="submit" onClick={(event) => handleSubmit(event)}>Gerar Automato</button>
         </form>
     )
 }
