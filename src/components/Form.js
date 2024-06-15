@@ -17,6 +17,29 @@ const Form = () => {
         setG(newState);
     }
 
+    function handleChangeP(i, j, event) {
+        const newState = {...G};
+        newState.P[i][j] = event.target.value;
+        setG(newState);
+    }
+
+    function handleAddRule(i) {
+        const newState = {...G};
+        newState.P[i] = [...newState.P[i], ""];
+        setG(newState);
+    }
+
+    function handleAddRuleSet() {
+        const newState = {...G};
+        newState.P = [...newState.P, [""]];
+        setG(newState);
+    }
+
+    function handleChangeS(event) {
+        const newState = {...G};
+        newState.S = event.target.value;
+        setG(newState);
+    }
     return (
         <form action="">
             <h1>Gramatica</h1>
@@ -36,6 +59,32 @@ const Form = () => {
                     <button type="button" onClick={() => handleAdd(prop)}>+</button>
                 </div>
             ))}
+            <div id="P">
+                <span>P: {"{"}</span>
+                    {G.P.map((rule, i) => (
+                        <div className="rule">
+                            <input type="text" defaultValue={rule[0]} id="0" onChange={(event) => handleChangeP(i, 0, event)}/>
+                            <span> | </span>
+                            {rule.slice(1).map((el, j) => (
+                                <input 
+                                    type="text" 
+                                    name="" 
+                                    id={j+1} 
+                                    defaultValue={el} 
+                                    key={j+1}
+                                    onChange={(event) => handleChangeP(i, j+1, event)}
+                                /> 
+                            ))}
+                            <button type="button" onClick={() => handleAddRule(i)}>+</button>
+                        </div>
+                    ))}
+                    <button type="button" onClick={() => handleAddRuleSet()}>+</button>
+                    {"}"}
+            </div>
+            <div id="S">
+                <span>S: </span>
+                <input type="text" id="S" onChange={(event) => handleChangeS(event)}/>
+            </div>
             <button type="submit">Gerar Automato</button>
         </form>
     )
