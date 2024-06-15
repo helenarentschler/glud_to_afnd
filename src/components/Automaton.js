@@ -25,7 +25,10 @@ const Automaton = ({ grammar }) => {
   }, [ grammar ]);
 
   return (
-    <div className="Diagrama" dangerouslySetInnerHTML={{ __html: automaton }} />
+    <div className="containerDiagrama">
+    <h2>Diagrama de Estados (&#948;)</h2>
+      <div className="diagrama" dangerouslySetInnerHTML={{ __html: automaton }} />
+    </div>
   );
 }
 

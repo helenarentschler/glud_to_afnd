@@ -96,7 +96,7 @@ const Form = ({ setGrammar }) => {
                 <span>S: </span>
                 <input type="text" id="S" onChange={(event) => handleChangeS(event)}/>
             </div>
-            <button type="submit" onClick={(event) => handleSubmit(event)}>Gerar Automato</button>
+            <button className="submit" type="submit" onClick={(event) => handleSubmit(event)}>Gerar Automato</button>
         </form>
     )
 }
