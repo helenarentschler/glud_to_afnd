@@ -2,21 +2,7 @@ import { useState } from "react";
 import Grammar from "../models/Grammar";
 
 const Form = ({ setGrammar }) => {
-
-    const [G, setG] = useState({
-        V: ["S","A"],
-        T: ["a"],
-        P: [["S","aA","eps"]],
-        S: "S"
-    });
-
-    //armazenar quais campos estão como label
-    const [isLabel, setIsLabel] = useState({
-        V: Array(G.V.length).fill(true),
-        T: Array(G.T.length).fill(true),
-        P: G.P.map(rule => Array(rule.length).fill(true)),
-        S: true
-    });
+    const [G, setG] = useState(new Grammar());
 
     function handleChange(prop, i, event) {
         const newState = { ...G };
@@ -28,39 +14,86 @@ const Form = ({ setGrammar }) => {
         const newState = { ...G };
         newState[prop] = [...newState[prop], ""];
         setG(newState);
-
-        //update isLabel
-        const newIsLabel = { ...isLabel };
-        newIsLabel[prop] = [...newIsLabel[prop], false];
-        setIsLabel(newIsLabel);
     }
 
     function handleChangeP(i, j, event) {
         const newState = { ...G };
-        newState.P[i][j] = event.target.value;
+        let input = event.target.value.trim();
+        
+        if (j === 0) {
+            let existsRuleSet = false;
+            for(let k in G.P){
+                if(input === G.P[k][0] && k != i)
+                    existsRuleSet=true;
+            }
+            if(existsRuleSet){
+                newState.P[i][j] ="";
+        
+                return;
+            }
+            if(!G.V.includes(input)){
+                newState.P[i][j] ="";
+                return;
+                
+            }
+            newState.P[i][j] = input;
+        } else {
+            if (input === "eps") {
+                newState.P[i][j] = ['eps'];
+            } else {
+                let splitInput = input.split(" ");
+                console.log(input+"-"+splitInput);
+                if (splitInput.length !== 2) {
+                    return;
+                }
+                newState.P[i][j] = [splitInput[0], splitInput[1]];
+            }
+        }
         setG(newState);
+        console.log(G.P);
+    }
+
+    function handleBlur(i, j, event) {
+        let input = event.target.value.trim();
+        
+        if (input === "eps") {
+            event.target.value = "eps";
+            return;
+        }
+        
+        let splitInput = input.split(" ");
+        if (splitInput.length !== 2) {
+            if (j === 0) {
+                let existsRuleSet = false;
+                for(let k in G.P){
+                    if(input === G.P[k][0] && k != i)
+                        existsRuleSet=true;
+                }
+                if(existsRuleSet){
+                    console.error("Já existe um rule set com essa cabeça");
+                    event.target.value = G.P[i][j];
+                }
+                if(!G.V.includes(splitInput[0])){
+                    console.error("cabeça deve estar em V");
+                    event.target.value = G.P[i][j];
+                }
+            } else {
+                event.target.value = G.P[i][j].join(" ");
+                console.error("Input must contain exactly two elements separated by a space.");
+            }
+        }
     }
 
     function handleAddRule(i) {
         const newState = { ...G };
-        newState.P[i] = [...newState.P[i], ""];
+        newState.P[i] = [...newState.P[i], [""]];
         setG(newState);
-
-        //update isLabel
-        const newIsLabel = { ...isLabel };
-        newIsLabel.P[i] = [...newIsLabel.P[i], false];
-        setIsLabel(newIsLabel);
     }
 
     function handleAddRuleSet() {
         const newState = { ...G };
-        newState.P = [...newState.P, ["","eps"]];
+        newState.P = [...newState.P, ["", [""]]];
         setG(newState);
-
-        //update isLabel
-        const newIsLabel = { ...isLabel };
-        newIsLabel.P = [...newIsLabel.P, [false]];
-        setIsLabel(newIsLabel);
     }
 
     function handleChangeS(event) {
@@ -74,158 +107,60 @@ const Form = ({ setGrammar }) => {
         setGrammar(G);
     }
 
-    function handleRemoveRuleSet(i) {
-        const newState = { ...G };
-        if (newState.P.length > 1) {
-            newState.P.splice(i, 1);
-            setG(newState);
-        }
-        const newIsLabel = { ...isLabel };
-        newIsLabel.P.splice(i, 1);
-        setIsLabel(newIsLabel);
-    }
-    
-    function handleRemove(prop, i) {
-        const newState = { ...G };
-        if (newState[prop].length > 1) {
-            newState[prop].splice(i, 1);
-            setG(newState);
-
-            // Update isLabel for removed element
-            const newIsLabel = { ...isLabel };
-            newIsLabel[prop].splice(i, 1);
-            setIsLabel(newIsLabel);
-        }
-    }
-
-    function handleBlur(prop, i, j = null) {
-    const newIsLabel = { ...isLabel };
-    if (prop === 'P') {
-        if (j === 0 && G.P[i][j].trim() === "") {
-            handleRemoveRuleSet(i);
-        } else if (G.P[i][j].trim() !== "") {
-            newIsLabel.P[i][j] = true;
-        } else {
-            handleRemoveRule(i, j);
-        }
-    } else if (G[prop][i].trim() !== "") {
-        newIsLabel[prop][i] = true;
-    } else {
-        handleRemove(prop, i);
-    }
-    setIsLabel(newIsLabel);
-}
-
-
-    function handleLabelClick(prop, i, j = null) {
-        const newIsLabel = { ...isLabel };
-        if (prop === 'P') {
-            newIsLabel.P[i][j] = false;
-        } else {
-            newIsLabel[prop][i] = false;
-        }
-        setIsLabel(newIsLabel);
-    }
-
-    function handleRemoveRule(i, j) {
-        const newState = { ...G };
-        if (newState.P[i].length > 1) {
-            newState.P[i].splice(j, 1);
-            setG(newState);
-
-            // Update isLabel for removed rule
-            const newIsLabel = { ...isLabel };
-            newIsLabel.P[i].splice(j, 1);
-            setIsLabel(newIsLabel);
-        }
-    }
-
-    const canAdd = (prop) => {
-        return G[prop].length === 0 || G[prop][G[prop].length - 1].trim() !== "";
-    };
-
-    const canAddRuleSet = () => {
-        const lastRuleSet = G.P[G.P.length - 1];
-        return lastRuleSet.length > 0 && lastRuleSet[0].trim() !== "";
-    };
-
-    const canAddRule = (prop) => {
-        return prop.trim() !== "";
-    };
-
     return (
-        <form action="">
+        <form onSubmit={handleSubmit}>
             <h1>Gramática</h1>
             {Object.keys(G).slice(0, 2).map((prop) => (
-                <div className="grammarDef" id={prop} key={prop}>
+                <div key={prop} id={prop}>
                     <span>{prop}: </span>
                     {G[prop].map((el, i) => (
-                        isLabel[prop][i] ? (
-                            <span className="insert" key={i} onClick={() => handleLabelClick(prop, i)}>{el}</span>
-                        ) : (
-                            <input
-                                key={i}
-                                type="text"
-                                value={el}
-                                onChange={(event) => handleChange(prop, i, event)}
-                                onBlur={() => handleBlur(prop, i)}
-                            />
-                        )
+                        <input 
+                            type="text" 
+                            key={i} 
+                            defaultValue={el} 
+                            onChange={(event) => handleChange(prop, i, event)} 
+                        />
                     ))}
-                    <button type="button" onClick={() => { if (canAdd(prop)) handleAdd(prop); }}>+</button>
+                    <button type="button" onClick={() => handleAdd(prop)}>+</button>
                 </div>
             ))}
-
-            <div className="grammarDef" id="P">
+            <div id="P">
                 <span>P: {"{"}</span>
                 {G.P.map((rule, i) => (
                     <div className="rule" key={i}>
-                        {isLabel.P[i][0] ? (
-                            <span className="insert" onClick={() => handleLabelClick('P', i, 0)}>{rule[0]}</span>
-                        ) : (
-                            <input
-                                type="text"
-                                value={rule[0]}
-                                onChange={(event) => handleChangeP(i, 0, event)}
-                                onBlur={() => handleBlur('P', i, 0)}
-                            />
-                        )}
-                        <span> &rarr; </span>
+                        <input 
+                            type="text" 
+                            defaultValue={rule[0]} 
+                            onChange={(event) => handleChangeP(i, 0, event)}
+                            onBlur={(event) => handleBlur(i, 0, event)} 
+                        />
+                        <span> | </span>
                         {rule.slice(1).map((el, j) => (
-                            isLabel.P[i][j + 1] ? (
-                                <span className="insert" key={j + 1} onClick={() => handleLabelClick('P', i, j + 1)}>{el}</span>
-                            ) : (
-                                <input
-                                    key={j + 1}
-                                    type="text"
-                                    value={el}
-                                    onChange={(event) => handleChangeP(i, j + 1, event)}
-                                    onBlur={() => handleBlur('P', i, j + 1)}
-                                />
-                            )
+                            <input 
+                                type="text" 
+                                key={j + 1} 
+                                defaultValue={el.join(" ")} 
+                                onChange={(event) => handleChangeP(i, j + 1, event)}
+                                onBlur={(event) => handleBlur(i, j + 1, event)} 
+                            />
                         ))}
-                        <button type="button" onClick={() => { if (canAddRule(rule[rule.length-1])) handleAddRule(i) }}>+</button>
+                        <button type="button" onClick={() => handleAddRule(i)}>+</button>
                     </div>
                 ))}
-                <button type="button" onClick={() => { if (canAddRuleSet()) handleAddRuleSet(); }}>+</button>
+                <button type="button" onClick={handleAddRuleSet}>+</button>
                 {"}"}
             </div>
             <div id="S">
                 <span>S: </span>
-                {isLabel.S ? (
-                    <span className="insert" onClick={() => setIsLabel({ ...isLabel, S: false })}>{G.S}</span>
-                ) : (
-                    <input
-                        type="text"
-                        value={G.S}
-                        onChange={(event) => handleChangeS(event)}
-                        onBlur={() => setIsLabel({ ...isLabel, S: G.S.trim() !== "" })}
-                    />
-                )}
+                <input 
+                    type="text" 
+                    defaultValue={G.S} 
+                    onChange={handleChangeS} 
+                />
             </div>
-            <button className="submit" type="submit" onClick={(event) => handleSubmit(event)}>Gerar Autômato</button>
+            <button className="submit" type="submit">Gerar Autômato</button>
         </form>
     );
-}
+};
 
 export default Form;

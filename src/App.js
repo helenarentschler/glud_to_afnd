@@ -4,7 +4,7 @@ import Automaton from './components/Automaton';
 import Sobre from './components/Sobre';
 import FormalDef from './components/FormalDef';
 import { useState } from 'react';
-
+import Grammar from './models/Grammar';
 
 function App() {
 
@@ -17,10 +17,10 @@ function App() {
       </div>
       <div className="container">
         <Form setGrammar={setGrammar}/>
-        <FormalDef/>
         <Sobre/> 
       </div>
       <hr></hr>
+        <FormalDef/>
       <Automaton grammar={grammar}/>
     </div>
   );
