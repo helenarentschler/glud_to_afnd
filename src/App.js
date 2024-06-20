@@ -4,7 +4,7 @@ import Automaton from './components/Automaton';
 import Sobre from './components/Sobre';
 import FormalDef from './components/FormalDef';
 import { useState } from 'react';
-import Grammar from './models/Grammar';
+
 
 function App() {
 
@@ -15,7 +15,7 @@ function App() {
       <div className="header">
         <h1>Conversor de Gramática Regular para Autômato - GLUD para AFND-&#949;</h1>
       </div>
-      <div className="Container">
+      <div className="container">
         <Form setGrammar={setGrammar}/>
         <FormalDef/>
         <Sobre/> 
