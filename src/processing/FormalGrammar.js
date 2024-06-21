@@ -41,7 +41,9 @@ export default class FormalGrammar {
                 return this.checkRules(state, params.i, params.j, params.event);    
 
             case 'checkSetInput':
+
                 return this.checkSetInput(state, params.set);
+
             default:
                 return state;
         }
@@ -149,8 +151,7 @@ export default class FormalGrammar {
 
     checkSetInput = (state, set) => {
         const newState = { ...state };
-        console.log("aqui", newState[set].slice(-1)[0])
-        if(newState[set].slice(-1)[0] == "") {
+        if(newState[set].slice(-1)[0] == "" && newState[set].length > 1) {
             newState[set] = [...newState[set].slice(0, -1)];
             return newState;
         }

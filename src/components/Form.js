@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import FormalGrammar from "../processing/FormalGrammar";
 
 const Form = ({ setGrammar }) => {
@@ -6,6 +6,7 @@ const Form = ({ setGrammar }) => {
     const formalGrammar = new FormalGrammar();
 
     const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
+    const inputRefs = useRef({});
 
     function handleChange(set, i, event) {
         dispatchG({ type: 'updateSet',  payload: { set, i, event }});
@@ -33,7 +34,6 @@ const Form = ({ setGrammar }) => {
 
     function handleChangeS(event) {
         dispatchG({ type: 'updateS', payload: { event }});
-
     }
 
     function handleSubmit(event) {
@@ -42,9 +42,9 @@ const Form = ({ setGrammar }) => {
     }
 
     function handleSetBlur(event, set) {
-        console.log(event, set)
         dispatchG({ type: 'checkSetInput', payload: { set }});
     }
+
 
     return (
         <form onSubmit={handleSubmit}>
@@ -59,6 +59,7 @@ const Form = ({ setGrammar }) => {
                             defaultValue={el} 
                             onChange={(event) => handleChange(prop, i, event)} 
                             onBlur={(event) => handleSetBlur(event, prop)}
+                            autoFocus={G[prop].length - 1 === i}
                         />
                     ))}
                     <button type="button" onClick={() => handleAdd(prop)}>+</button>
@@ -82,6 +83,7 @@ const Form = ({ setGrammar }) => {
                                 defaultValue={el.join(" ")} 
                                 onChange={(event) => handleChangeP(i, j + 1, event)}
                                 onBlur={(event) => handleBlur(i, j + 1, event)} 
+                                autoFocus={G.P.length - 1 === i}
                             />
                         ))}
                         <button type="button" onClick={() => handleAddRule(i)}>+</button>

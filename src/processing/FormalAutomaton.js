@@ -1,4 +1,5 @@
 export default class FormalAutomaton {
+   
     constructor(V, T, P, S) {
         this.sigma = T;
         this.states = V;

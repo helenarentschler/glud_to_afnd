@@ -1,6 +1,6 @@
 import './App.css';
 import Form from './components/Form';
-import Automaton from './components/Automaton';
+import Diagram from './components/Diagram';
 import Sobre from './components/Sobre';
 import FormalDef from './components/FormalDef';
 import { useState } from 'react';
@@ -20,7 +20,7 @@ function App() {
       </div>
       <hr></hr>
         <FormalDef/>
-      <Automaton grammar={grammar}/>
+      <Diagram grammar={grammar}/>
     </div>
   );
 }
