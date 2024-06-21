@@ -4,7 +4,6 @@ import Automaton from './components/Automaton';
 import Sobre from './components/Sobre';
 import FormalDef from './components/FormalDef';
 import { useState } from 'react';
-import Grammar from './models/Grammar';
 
 function App() {
 

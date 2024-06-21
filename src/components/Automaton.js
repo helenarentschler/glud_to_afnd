@@ -11,10 +11,8 @@ const Automaton = ({ grammar }) => {
     async function renderAutomaton() {
       
       if(grammar) {
-        console.log(grammar);
         const formalAutomaton = new FormalAutomaton(grammar.V, grammar.T, grammar.P, grammar.S);
         const dot = formalAutomaton.generateDot();
-        console.log(dot)
         const viz = await instance();
         const svg = viz.renderSVGElement(dot);
         setAutomaton(svg.outerHTML);

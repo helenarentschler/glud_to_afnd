@@ -1,110 +1,49 @@
-import { useState } from "react";
-import Grammar from "../models/Grammar";
+import { useReducer } from "react";
+import FormalGrammar from "../processing/FormalGrammar";
 
 const Form = ({ setGrammar }) => {
-    const [G, setG] = useState(new Grammar());
 
-    function handleChange(prop, i, event) {
-        const newState = { ...G };
-        newState[prop][i] = event.target.value;
-        setG(newState);
+    const formalGrammar = new FormalGrammar();
+
+    const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
+
+    function handleChange(set, i, event) {
+        dispatchG({ type: 'updateSet',  payload: { set, i, event }});
     }
 
-    function handleAdd(prop) {
-        const newState = { ...G };
-        newState[prop] = [...newState[prop], ""];
-        setG(newState);
+    function handleAdd(set) {
+        dispatchG({ type: 'addSetElement',  payload: { set }});
     }
 
     function handleChangeP(i, j, event) {
-        const newState = { ...G };
-        let input = event.target.value.trim();
-        
-        if (j === 0) {
-            let existsRuleSet = false;
-            for(let k in G.P){
-                if(input === G.P[k][0] && k != i)
-                    existsRuleSet=true;
-            }
-            if(existsRuleSet){
-                newState.P[i][j] ="";
-        
-                return;
-            }
-            if(!G.V.includes(input)){
-                newState.P[i][j] ="";
-                return;
-                
-            }
-            newState.P[i][j] = input;
-        } else {
-            if (input === "eps") {
-                newState.P[i][j] = ['eps'];
-            } else {
-                let splitInput = input.split(" ");
-                console.log(input+"-"+splitInput);
-                if (splitInput.length !== 2) {
-                    return;
-                }
-                newState.P[i][j] = [splitInput[0], splitInput[1]];
-            }
-        }
-        setG(newState);
-        console.log(G.P);
+        dispatchG({ type: 'updateProductions',  payload: { i, j, event }});
     }
 
     function handleBlur(i, j, event) {
-        let input = event.target.value.trim();
-        
-        if (input === "eps") {
-            event.target.value = "eps";
-            return;
-        }
-        
-        let splitInput = input.split(" ");
-        if (splitInput.length !== 2) {
-            if (j === 0) {
-                let existsRuleSet = false;
-                for(let k in G.P){
-                    if(input === G.P[k][0] && k != i)
-                        existsRuleSet=true;
-                }
-                if(existsRuleSet){
-                    console.error("Já existe um rule set com essa cabeça");
-                    event.target.value = G.P[i][j];
-                }
-                if(!G.V.includes(splitInput[0])){
-                    console.error("cabeça deve estar em V");
-                    event.target.value = G.P[i][j];
-                }
-            } else {
-                event.target.value = G.P[i][j].join(" ");
-                console.error("Input must contain exactly two elements separated by a space.");
-            }
-        }
+        dispatchG({ type: 'checkRules',  payload: { i, j, event }});
     }
 
     function handleAddRule(i) {
-        const newState = { ...G };
-        newState.P[i] = [...newState.P[i], [""]];
-        setG(newState);
+        dispatchG({ type: 'addRule',  payload: { i }});
     }
 
     function handleAddRuleSet() {
-        const newState = { ...G };
-        newState.P = [...newState.P, ["", [""]]];
-        setG(newState);
+        dispatchG({ type: 'addRuleSet'});
     }
 
     function handleChangeS(event) {
-        const newState = { ...G };
-        newState.S = event.target.value;
-        setG(newState);
+        dispatchG({ type: 'updateS', payload: { event }});
+
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         setGrammar(G);
+    }
+
+    function handleSetBlur(event, set) {
+        console.log(event, set)
+        dispatchG({ type: 'checkSetInput', payload: { set }});
     }
 
     return (
@@ -119,6 +58,7 @@ const Form = ({ setGrammar }) => {
                             key={i} 
                             defaultValue={el} 
                             onChange={(event) => handleChange(prop, i, event)} 
+                            onBlur={(event) => handleSetBlur(event, prop)}
                         />
                     ))}
                     <button type="button" onClick={() => handleAdd(prop)}>+</button>
@@ -134,7 +74,7 @@ const Form = ({ setGrammar }) => {
                             onChange={(event) => handleChangeP(i, 0, event)}
                             onBlur={(event) => handleBlur(i, 0, event)} 
                         />
-                        <span> | </span>
+                        <span> ⭢ </span>
                         {rule.slice(1).map((el, j) => (
                             <input 
                                 type="text" 
