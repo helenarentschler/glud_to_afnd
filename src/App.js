@@ -10,7 +10,7 @@ function App() {
 
   const [ grammar, setGrammar ] = useState(null);
   const [ automaton, setAutomaton ] = useState(null);
-
+  
   useEffect(() => {
     
     if(grammar) {
@@ -31,7 +31,7 @@ function App() {
       </div>
       <hr></hr>
         <FormalDef automaton={automaton}/>
-      <Diagram automaton={automaton}/>
+        <Diagram automaton={automaton}/>
     </div>
   );
 }
