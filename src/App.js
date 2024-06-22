@@ -3,11 +3,22 @@ import Form from './components/Form';
 import Diagram from './components/Diagram';
 import Sobre from './components/Sobre';
 import FormalDef from './components/FormalDef';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import FormalAutomaton from './processing/FormalAutomaton';
 
 function App() {
 
   const [ grammar, setGrammar ] = useState(null);
+  const [ automaton, setAutomaton ] = useState(null);
+
+  useEffect(() => {
+    
+    if(grammar) {
+      const formalAutomaton = new FormalAutomaton(grammar.V, grammar.T, grammar.P, grammar.S);
+      setAutomaton(formalAutomaton);
+    }
+
+  }, [grammar]);
 
   return (
     <div className="App">
@@ -19,8 +30,8 @@ function App() {
         <Sobre/> 
       </div>
       <hr></hr>
-        <FormalDef/>
-      <Diagram grammar={grammar}/>
+        <FormalDef automaton={automaton}/>
+      <Diagram automaton={automaton}/>
     </div>
   );
 }

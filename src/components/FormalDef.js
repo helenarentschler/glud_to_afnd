@@ -1,5 +1,5 @@
-const FormalDef = ()=>{
-   
+const FormalDef = ({automaton}) =>{
+    console.log(automaton)
     return (
         <div className="formalDef">
           <h2>Definição Formal</h2>

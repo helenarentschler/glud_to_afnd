@@ -2,7 +2,7 @@ import { instance } from "@viz-js/viz";
 import { useEffect, useState } from "react";
 import FormalAutomaton from "../processing/FormalAutomaton";
 
-const Diagram = ({ grammar }) => {
+const Diagram = ({ automaton }) => {
 
   const [ diagram, setDiagram ] = useState('');
   
@@ -10,9 +10,8 @@ const Diagram = ({ grammar }) => {
 
     async function renderDiagram() {
       
-      if(grammar) {
-        const formalDiagram = new FormalAutomaton(grammar.V, grammar.T, grammar.P, grammar.S);
-        const dot = formalDiagram.generateDot();
+      if(automaton) {
+        const dot = automaton.generateDot();
         const viz = await instance();
         const svg = viz.renderSVGElement(dot);
         setDiagram(svg.outerHTML);
@@ -20,7 +19,7 @@ const Diagram = ({ grammar }) => {
     }
 
     renderDiagram();
-  }, [ grammar ]);
+  }, [ automaton ]);
 
   return (
     <div className="containerDiagrama">
