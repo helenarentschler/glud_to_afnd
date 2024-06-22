@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import FormalGrammar from "../processing/FormalGrammar";
 
 const Form = ({ setGrammar }) => {
@@ -7,6 +7,9 @@ const Form = ({ setGrammar }) => {
 
     const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
     
+    useEffect(() => {
+        setGrammar(G);
+    }, []) 
 
     function handleChange(set, i, event) {
         dispatchG({ type: 'updateSet',  payload: { set, i, event }});
