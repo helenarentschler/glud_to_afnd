@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useReducer } from "react";
 import FormalGrammar from "../processing/FormalGrammar";
 
 const Form = ({ setGrammar }) => {
@@ -6,7 +6,7 @@ const Form = ({ setGrammar }) => {
     const formalGrammar = new FormalGrammar();
 
     const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
-    const inputRefs = useRef({});
+    
 
     function handleChange(set, i, event) {
         dispatchG({ type: 'updateSet',  payload: { set, i, event }});
@@ -20,8 +20,9 @@ const Form = ({ setGrammar }) => {
         dispatchG({ type: 'updateProductions',  payload: { i, j, event }});
     }
 
-    function handleBlur(i, j, event) {
+    function handleBlurP(i, j, event) {
         dispatchG({ type: 'checkRules',  payload: { i, j, event }});
+        dispatchG({ type: 'checkInputP', payload: { i }});
     }
 
     function handleAddRule(i) {
@@ -41,28 +42,28 @@ const Form = ({ setGrammar }) => {
         setGrammar(G);
     }
 
-    function handleSetBlur(event, set) {
-        dispatchG({ type: 'checkSetInput', payload: { set }});
+    function handleBlur(set) {
+        dispatchG({ type: 'checkInput', payload: { set }});
     }
 
 
     return (
         <form onSubmit={handleSubmit}>
             <h1>Gramática</h1>
-            {Object.keys(G).slice(0, 2).map((prop) => (
-                <div key={prop} id={prop}>
-                    <span>{prop}: </span>
-                    {G[prop].map((el, i) => (
+            {Object.keys(G).slice(0, 2).map((set) => (
+                <div key={set} id={set}>
+                    <span>{set}: </span>
+                    {G[set].map((el, i) => (
                         <input 
                             type="text" 
                             key={i} 
                             defaultValue={el} 
-                            onChange={(event) => handleChange(prop, i, event)} 
-                            onBlur={(event) => handleSetBlur(event, prop)}
-                            autoFocus={G[prop].length - 1 === i}
+                            onChange={(event) => handleChange(set, i, event)} 
+                            onBlur={() => handleBlur(set)}
+                            autoFocus={G[set].length - 1 === i}
                         />
                     ))}
-                    <button type="button" onClick={() => handleAdd(prop)}>+</button>
+                    <button type="button" onClick={() => handleAdd(set)}>+</button>
                 </div>
             ))}
             <div id="P">
@@ -73,7 +74,7 @@ const Form = ({ setGrammar }) => {
                             type="text" 
                             defaultValue={rule[0]} 
                             onChange={(event) => handleChangeP(i, 0, event)}
-                            onBlur={(event) => handleBlur(i, 0, event)} 
+                            onBlur={(event) => handleBlurP(i, 0, event)} 
                         />
                         <span> ⭢ </span>
                         {rule.slice(1).map((el, j) => (
@@ -82,8 +83,8 @@ const Form = ({ setGrammar }) => {
                                 key={j + 1} 
                                 defaultValue={el.join(" ")} 
                                 onChange={(event) => handleChangeP(i, j + 1, event)}
-                                onBlur={(event) => handleBlur(i, j + 1, event)} 
-                                autoFocus={G.P.length - 1 === i}
+                                onBlur={(event) => handleBlurP(i, j + 1, event)} 
+                                autoFocus={G.P[i].length - 1 === j + 1}
                             />
                         ))}
                         <button type="button" onClick={() => handleAddRule(i)}>+</button>

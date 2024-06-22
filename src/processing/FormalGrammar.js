@@ -40,21 +40,26 @@ export default class FormalGrammar {
                 
                 return this.checkRules(state, params.i, params.j, params.event);    
 
-            case 'checkSetInput':
+            case 'checkInput':
 
-                return this.checkSetInput(state, params.set);
+                return this.checkInput(state, params.set);
+            
+            case 'checkInputP':
 
+                return this.checkInputP(state, params.i);
             default:
                 return state;
         }
     }
 
+    // updates V or T element
     updateSet = (state, set, i, event) => {
         const newState = { ...state };
         newState[set][i] = event.target.value;
         return newState;
     }
     
+    // updates P element, cheking if grammar is padronized
     updateProductions = (state, i, j, event) => {
 
         const newState = { ...state };
@@ -90,30 +95,36 @@ export default class FormalGrammar {
         return newState;
     }
 
+    // updates S
     updateS = (state, event) => {
         const newState = { ...state };
         newState.S = event.target.value;
         return newState;
     }
 
+    // pushes new empty string to V or T to trigger new input field 
     addSetElement = (state, set) => {
         const newState = { ...state };
         newState[set] = [...newState[set], ""];
         return newState;
     }
 
+    // pushes new element or "rule" to a P head (an element is an array)
     addRule = (state, i) => {
         const newState = { ...state };
         newState.P[i] = [...newState.P[i], [""]];
         return newState;
     }
 
+    // pushes new line or "ruleset" to P array 
+    //(an element is an array with a string as head and an array as body)
     addRuleSet = (state) => {
         const newState = { ...state };
         newState.P = [...newState.P, ["", [""]]];
         return newState;
     }
 
+    // updates 
     checkRules = (state, i, j, event) => {
 
         let input = event.target.value.trim();
@@ -149,13 +160,31 @@ export default class FormalGrammar {
         return state;
     }
 
-    checkSetInput = (state, set) => {
+    isLastElementEmptyArray = (arr) => Array.isArray(arr) && arr.length === 1 && arr[0] === '';
+
+    // check if V, T, P sets contain empty string and cuts it out
+    checkInputP = (state, i ) => {
+
         const newState = { ...state };
+        console.log(newState.P[i].slice(-1)[0])
+        
+        if(this.isLastElementEmptyArray(newState.P[i].slice(-1)[0]) && newState.P[i].length > 2) {
+            console.log("entrou")
+            newState.P[i] = [...newState.P[i].slice(0, -1)];
+        }
+        
+        return newState;
+    }
+
+    checkInput = (state, set) => {
+
+        const newState = { ...state };
+        
         if(newState[set].slice(-1)[0] == "" && newState[set].length > 1) {
             newState[set] = [...newState[set].slice(0, -1)];
-            return newState;
         }
-        return state;
+        
+        return newState;
     }
 
 }

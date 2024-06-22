@@ -1,10 +1,10 @@
-export default class Grammar {
+export default class Automaton {
 
-    constructor(V, T, P, S) {
-        this.sigma = T;
-        this.states = V;
-        this.initialState = S;
-        this.finalStates = []; // To store final states
-        this.transitions = {};
+    constructor(sigma, states, initialState, finalStates, transitions) {
+        this.sigma = sigma;
+        this.states = states;
+        this.initialState = initialState;
+        this.finalStates = finalStates; 
+        this.transitions = transitions;
     }
 }
