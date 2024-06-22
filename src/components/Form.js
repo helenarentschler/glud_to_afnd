@@ -1,44 +1,39 @@
-import { useState } from "react";
-import Grammar from "../models/Grammar";
+import { useEffect, useReducer, useRef } from "react";
+import FormalGrammar from "../processing/FormalGrammar";
 
 const Form = ({ setGrammar }) => {
 
-    const [ G, setG ] = useState(new Grammar());
+    const formalGrammar = new FormalGrammar();
 
-    function handleChange(prop, i, event) {
-        const newState = {...G};
-        newState[prop][i] = event.target.value;
-        setG(newState);
+    const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
+    const inputRefs = useRef({});
+
+    function handleChange(set, i, event) {
+        dispatchG({ type: 'updateSet',  payload: { set, i, event }});
     }
 
-    function handleAdd(prop) {
-        const newState = {...G};
-        newState[prop] = [...newState[prop], ""];
-        setG(newState);
+    function handleAdd(set) {
+        dispatchG({ type: 'addSetElement',  payload: { set }});
     }
 
     function handleChangeP(i, j, event) {
-        const newState = {...G};
-        newState.P[i][j] = event.target.value;
-        setG(newState);
+        dispatchG({ type: 'updateProductions',  payload: { i, j, event }});
+    }
+
+    function handleBlur(i, j, event) {
+        dispatchG({ type: 'checkRules',  payload: { i, j, event }});
     }
 
     function handleAddRule(i) {
-        const newState = {...G};
-        newState.P[i] = [...newState.P[i], ""];
-        setG(newState);
+        dispatchG({ type: 'addRule',  payload: { i }});
     }
 
     function handleAddRuleSet() {
-        const newState = {...G};
-        newState.P = [...newState.P, [""]];
-        setG(newState);
+        dispatchG({ type: 'addRuleSet'});
     }
 
     function handleChangeS(event) {
-        const newState = {...G};
-        newState.S = event.target.value;
-        setG(newState);
+        dispatchG({ type: 'updateS', payload: { event }});
     }
 
     function handleSubmit(event) {
@@ -46,59 +41,68 @@ const Form = ({ setGrammar }) => {
         setGrammar(G);
     }
 
+    function handleSetBlur(event, set) {
+        dispatchG({ type: 'checkSetInput', payload: { set }});
+    }
+
+
     return (
-        <form action="">
-            <h1>Gramatica</h1>
+        <form onSubmit={handleSubmit}>
+            <h1>Gramática</h1>
             {Object.keys(G).slice(0, 2).map((prop) => (
-                <div id={prop}>
+                <div key={prop} id={prop}>
                     <span>{prop}: </span>
                     {G[prop].map((el, i) => (
                         <input 
                             type="text" 
-                            name="" 
-                            id={i} 
+                            key={i} 
                             defaultValue={el} 
-                            key={i}
-                            onChange={(event) => handleChange(prop, i, event)}
-                        /> 
+                            onChange={(event) => handleChange(prop, i, event)} 
+                            onBlur={(event) => handleSetBlur(event, prop)}
+                            autoFocus={G[prop].length - 1 === i}
+                        />
                     ))}
                     <button type="button" onClick={() => handleAdd(prop)}>+</button>
                 </div>
             ))}
             <div id="P">
                 <span>P: {"{"}</span>
-                    {G.P.map((rule, i) => (
-                        <div className="rule">
+                {G.P.map((rule, i) => (
+                    <div className="rule" key={i}>
+                        <input 
+                            type="text" 
+                            defaultValue={rule[0]} 
+                            onChange={(event) => handleChangeP(i, 0, event)}
+                            onBlur={(event) => handleBlur(i, 0, event)} 
+                        />
+                        <span> ⭢ </span>
+                        {rule.slice(1).map((el, j) => (
                             <input 
                                 type="text" 
-                                defaultValue={rule[0]} 
-                                id="0" 
-                                onChange={(event) => handleChangeP(i, 0, event)}
+                                key={j + 1} 
+                                defaultValue={el.join(" ")} 
+                                onChange={(event) => handleChangeP(i, j + 1, event)}
+                                onBlur={(event) => handleBlur(i, j + 1, event)} 
+                                autoFocus={G.P.length - 1 === i}
                             />
-                            <span> | </span>
-                            {rule.slice(1).map((el, j) => (
-                                <input 
-                                    type="text" 
-                                    name="" 
-                                    id={j+1} 
-                                    defaultValue={el} 
-                                    key={j+1}
-                                    onChange={(event) => handleChangeP(i, j+1, event)}
-                                /> 
-                            ))}
-                            <button type="button" onClick={() => handleAddRule(i)}>+</button>
-                        </div>
-                    ))}
-                    <button type="button" onClick={() => handleAddRuleSet()}>+</button>
-                    {"}"}
+                        ))}
+                        <button type="button" onClick={() => handleAddRule(i)}>+</button>
+                    </div>
+                ))}
+                <button type="button" onClick={handleAddRuleSet}>+</button>
+                {"}"}
             </div>
             <div id="S">
                 <span>S: </span>
-                <input type="text" id="S" onChange={(event) => handleChangeS(event)}/>
+                <input 
+                    type="text" 
+                    defaultValue={G.S} 
+                    onChange={handleChangeS} 
+                />
             </div>
-            <button className="submit" type="submit" onClick={(event) => handleSubmit(event)}>Gerar Automato</button>
+            <button className="submit" type="submit">Gerar Autômato</button>
         </form>
-    )
-}
+    );
+};
 
 export default Form;

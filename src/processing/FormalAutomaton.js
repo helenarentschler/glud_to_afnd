@@ -1,4 +1,5 @@
 export default class FormalAutomaton {
+   
     constructor(V, T, P, S) {
         this.sigma = T;
         this.states = V;
@@ -31,7 +32,7 @@ export default class FormalAutomaton {
     }
 
     parseProduction(production) {
-        if (production === "eps") {
+        if (production == "eps") {
             return ["eps", "qf"]; // 'eps' transitions to a final state 'qf'
         }
         let symbol = production[0];
