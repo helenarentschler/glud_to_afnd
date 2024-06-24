@@ -5,7 +5,7 @@ export default class FormalAutomaton {
         this.sigma = T;
         this.states = V;
         this.initialState = S;
-        this.finalStates = []; // To store final states
+        this.finalStates = "qf"; // To store final states
         this.transitions = this.createTransitionFunction(P);
     }
 
@@ -23,9 +23,6 @@ export default class FormalAutomaton {
                     transitions[state][symbol] = [];
                 }
                 transitions[state][symbol].push(nextState);
-                if (nextState === "qf") {
-                    this.finalStates.push(state);
-                }
             });
         });
 
