@@ -103,16 +103,22 @@ export default class FormalGrammar {
             //is body
             } else {
 
-                if(input === "" && j >= 2) {
+                if(input === "" && (state.P[i].length-1 != j || j>=2)) {
                     newState.P[i].splice(j, 1);
                     return newState;
                 }
 
+                for(let k in state.P[i]){
+                    if(state.P[i][k][0] == input&&
+                    k != j){
+                        throw new Error("Já existe uma produção igual para essa cabeça.");
+                    }
+                }
                 if (input === "eps") {
                     newState.P[i][j] = ['eps'];
                     return newState;
                 }
-    
+
                 if (splitInput.length !== 2) {
                     errors.push("Corpo deve ter tamanho 2.");
                 }
@@ -128,7 +134,7 @@ export default class FormalGrammar {
                 for(let k in state.P[i]){
                     if(state.P[i][k][0] == splitInput[0] &&
                     state.P[i][k][1] == splitInput[1] &&
-                    k !== state.P[i].length){
+                    k != j){
                         errors.push("Já existe uma produção igual para essa cabeça.");
                     }
                 }
