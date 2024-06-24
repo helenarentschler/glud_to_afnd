@@ -6,10 +6,6 @@ const Form = ({ setGrammar }) => {
     const formalGrammar = new FormalGrammar();
 
     const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
-    
-    useEffect(() => {
-        setGrammar(G);
-    }, []) 
 
     function handleChange(set, i, event) {
         dispatchG({ type: 'updateSet',  payload: { set, i, event }});
@@ -19,13 +15,8 @@ const Form = ({ setGrammar }) => {
         dispatchG({ type: 'addSetElement',  payload: { set }});
     }
 
-    function handleChangeP(i, j, event) {
-        dispatchG({ type: 'updateProductions',  payload: { i, j, event }});
-    }
-
     function handleBlurP(i, j, event) {
-        dispatchG({ type: 'checkRules',  payload: { i, j, event }});
-        dispatchG({ type: 'checkInputP', payload: { i }});
+        dispatchG({ type: 'verifyProductions',  payload: { i, j, event }});
     }
 
     function handleAddRule(i) {
@@ -41,8 +32,15 @@ const Form = ({ setGrammar }) => {
     }
 
     function handleSubmit(event) {
+        
         event.preventDefault();
-        setGrammar(G);
+        
+        try {
+            formalGrammar.checkGrammarSubmit(G);
+            setGrammar(G);
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     function handleBlur(set) {
@@ -58,9 +56,10 @@ const Form = ({ setGrammar }) => {
                     <span>{set}: </span>
                     {G[set].map((el, i) => (
                         <input 
+                            id={set+i}
                             type="text" 
                             key={i} 
-                            defaultValue={el} 
+                            value={el} 
                             onChange={(event) => handleChange(set, i, event)} 
                             onBlur={() => handleBlur(set)}
                             autoFocus={G[set].length - 1 === i}
@@ -76,8 +75,8 @@ const Form = ({ setGrammar }) => {
                         <input 
                             type="text" 
                             defaultValue={rule[0]} 
-                            onChange={(event) => handleChangeP(i, 0, event)}
                             onBlur={(event) => handleBlurP(i, 0, event)} 
+                            autoFocus= {G.P[i].length <= 2}
                         />
                         <span> ⭢ </span>
                         {rule.slice(1).map((el, j) => (
@@ -85,9 +84,11 @@ const Form = ({ setGrammar }) => {
                                 type="text" 
                                 key={j + 1} 
                                 defaultValue={el.join(" ")} 
-                                onChange={(event) => handleChangeP(i, j + 1, event)}
                                 onBlur={(event) => handleBlurP(i, j + 1, event)} 
-                                autoFocus={G.P[i].length - 1 === j + 1}
+                                autoFocus={
+                                    G.P[i].length > 2  &&
+                                    G.P[i].length - 1 === j + 1
+                                }
                             />
                         ))}
                         <button type="button" onClick={() => handleAddRule(i)}>+</button>
@@ -101,7 +102,7 @@ const Form = ({ setGrammar }) => {
                 <input 
                     type="text" 
                     defaultValue={G.S} 
-                    onChange={handleChangeS} 
+                    onBlur={(event) => handleChangeS(event)} 
                 />
             </div>
             <button className="submit" type="submit">Gerar Autômato</button>
