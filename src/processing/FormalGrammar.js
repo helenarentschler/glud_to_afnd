@@ -81,16 +81,16 @@ export default class FormalGrammar {
                     return newState;
                 }
                 if (splitInput.length != 1) {
-                    errors.push("Cabeça deve ter tamanho 1");
+                    errors.push("Cabeça deve ter tamanho 1.");
                 }
     
                 if (!state.V.includes(splitInput[0])) {
-                    errors.push("Cabeça deve ser variável");
+                    errors.push("Cabeça deve ser variável.");
                 }
     
                 for (let line in state.P) {
                     if (input === state.P[line][0] && line != i) {
-                        errors.push("Cabeça deve ser única");
+                        errors.push("Cabeça deve ser única.");
                     }
                 }
     
@@ -114,17 +114,24 @@ export default class FormalGrammar {
                 }
     
                 if (splitInput.length !== 2) {
-                    errors.push("Corpo deve ter tamanho 2");
+                    errors.push("Corpo deve ter tamanho 2.");
                 }
     
                 if (!state.T.includes(splitInput[0])) {
-                    errors.push("Corpo deve começar com terminal válido");
+                    errors.push("Corpo deve começar com terminal válido.");
                 }
     
                 if (!state.V.includes(splitInput[1])) {
-                    errors.push("Corpo deve terminar com variável válida");
+                    errors.push("Corpo deve terminar com variável válida.");
                 }
-    
+                //checks if there is equal production in this ruleSet
+                for(let k in state.P[i]){
+                    if(state.P[i][k][0] == splitInput[0] &&
+                    state.P[i][k][1] == splitInput[1] &&
+                    k !== state.P[i].length){
+                        errors.push("Já existe uma produção igual para essa cabeça.");
+                    }
+                }
                 if (errors.length > 0) {
                     throw new Error(errors.join("\n"));
                 }
@@ -146,7 +153,7 @@ export default class FormalGrammar {
         const newState = { ...state };
 
         if (!state.V.includes(event.target.value)) {
-            alert("Deve ser variável");
+            alert("Deve ser variável.");
             event.target.value = "";
             return newState;
         }
@@ -162,7 +169,12 @@ export default class FormalGrammar {
         newState[set] = [...newState[set], ""];
         return newState;
     }
-
+    // pushes new element or "rule" to a P head (an element is an array)
+    addRule = (state, i) => {
+        const newState = { ...state };
+        newState.P[i] = [...newState.P[i], [""]];
+        return newState;
+    }
     // pushes new element or "rule" to a P head (an element is an array)
     addRuleSet = (state) => {
         //verifies if last ruleSet has an head
@@ -189,14 +201,14 @@ export default class FormalGrammar {
 
         let errors = [];
 
-        if(state.V.some(el => el === "")) errors.push("V inválido");
-        if(state.T.some(el => el === ""))  errors.push("T inválido");
+        if(state.V.some(el => el === "")) errors.push("V inválido.");
+        if(state.T.some(el => el === ""))  errors.push("T inválido.");
 
         for (let i in state.P) {
             if(state.P[i].some(el => el === "" || el[0] == "")) errors.push("P inválido");
         }
 
-        if(state.S === "") errors.push("S inválido");
+        if(state.S === "") errors.push("S inválido.");
 
         if (errors.length > 0) {
             throw new Error(errors.join("\n"));
