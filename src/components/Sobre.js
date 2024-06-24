@@ -5,11 +5,11 @@ const Sobre = () => {
             <h2>Sobre</h2>
             <p>
                 Este Conversor de Gramática Regular para Autômato transforma Gramáticas Lineares Unitárias à Direita (GLUD) 
-                em Autômatos Finitos Não Determinísticos com Transições Vazias (AFND-ε). 
+                em Autômatos Finitos Não Determinísticos com Transições Vazias (AFND-&#949;). 
                 A ferramenta não realiza a conversão da gramática caso não esteja no formato GLUD, fazendo necessário ao usuário realizar a conversão.
             </p>
             <p>
-                O conversor gera um AFND-ε equivalente, fornecendo a definição formal e um diagrama de estados.
+                O conversor gera um AFND-&#949; equivalente, fornecendo a definição formal e um diagrama de estados.
             </p>
             <h3>Orientações</h3>
             <ul>
