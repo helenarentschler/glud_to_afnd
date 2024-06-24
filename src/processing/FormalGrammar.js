@@ -66,11 +66,11 @@ export default class FormalGrammar {
         let input = event.target.value.trim();
         let splitInput = input.split(" ");
         let errors = [];
-        console.log(newState.P[i][j].length);
 
         if (newState.P[i][j][0] != splitInput[0] ||
             newState.P[i][j][1] != splitInput[1] ||
-            newState.P[i][j].length != splitInput.length
+            newState.P[i][j].length != splitInput.length ||
+            input == ""
         ) {
             try {
                 //is head
@@ -104,8 +104,15 @@ export default class FormalGrammar {
                     //is body
                 } else {
 
-                    if (input === "" && (state.P[i].length - 1 != j || j >= 2)) {
+                    if (input == "" && (state.P[i].length - 1 != j || j >= 2)) {
+
                         newState.P[i].splice(j, 1);
+                        event.target.parentElement.childNodes.forEach((input, k) => {
+                            let value = newState.P[i][k + 1];
+                            if(value){
+                                input.value = value[0] === "eps" ? "eps" : value.join(" ");
+                            }
+                        });
                         return newState;
                     }
 
@@ -182,7 +189,7 @@ export default class FormalGrammar {
     addRule = (state, i) => {
         const newState = { ...state };
         newState.P[i] = [...newState.P[i], [""]];
-        return newState;
+        return newState;   
     }
     // pushes new element or "rule" to a P head (an element is an array)
     addRuleSet = (state) => {

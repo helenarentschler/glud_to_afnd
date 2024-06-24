@@ -83,18 +83,20 @@ const Form = ({ setGrammar }) => {
                             autoFocus= {G.P[i].length <= 2}
                         />
                         <span> ⭢ </span>
-                        {rule.slice(1).map((el, j) => (
-                            <input 
-                                type="text" 
-                                key={j + 1} 
-                                defaultValue={el.join(" ")} 
-                                onBlur={(event) => handleBlurP(i, j + 1, event)} 
-                                autoFocus={
-                                    G.P[i].length > 2  &&
-                                    G.P[i].length - 1 === j + 1
-                                }
-                            />
-                        ))}
+                        <div>
+                            {rule.slice(1).map((el, j) => (
+                                <input 
+                                    type="text" 
+                                    key={j + 1} 
+                                    defaultValue={el.join(" ")} 
+                                    onBlur={(event) => handleBlurP(i, j + 1, event)} 
+                                    autoFocus={
+                                        G.P[i].length > 2  &&
+                                        G.P[i].length - 1 === j + 1
+                                    }
+                                />
+                            ))}
+                        </div>
                         <button type="button" onClick={() => handleAddRule(i)}>+</button>
                     </div>
                 ))}
@@ -105,6 +107,7 @@ const Form = ({ setGrammar }) => {
                 <span>S: </span>
                 <input 
                     type="text" 
+                    name="S"
                     defaultValue={G.S} 
                     onBlur={(event) => handleChangeS(event)} 
                 />
