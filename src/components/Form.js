@@ -7,6 +7,10 @@ const Form = ({ setGrammar }) => {
 
     const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
 
+    useEffect(() => {
+        setGrammar(G);
+    }, []);
+    
     function handleChange(set, i, event) {
         dispatchG({ type: 'updateSet',  payload: { set, i, event }});
     }
