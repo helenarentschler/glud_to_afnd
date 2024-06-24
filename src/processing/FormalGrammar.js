@@ -66,85 +66,92 @@ export default class FormalGrammar {
         let input = event.target.value.trim();
         let splitInput =input.split(" ");
         let errors = [];
+        console.log(newState.P[i][j].length);
+        
+        if(newState.P[i][j][0] != splitInput[0] ||
+            newState.P[i][j][1] != splitInput[1] ||
+            newState.P[i][j].length != splitInput.length
+        ) {
+            try {
+                //is head
+                if (j == 0) {
     
-        try {
-            //is head
-            if (j == 0) {
-
-                if(i > 0 && input === "" && state.P[i][j + 1][0] === "") {
-                    newState.P.splice(i, 1);
-                    return newState;
-                }
-                //checks if last ruleSet has a head, case no, delete ruleSet
-                if(i>0 && state.P[state.P.length-1][0].trim() === ""){
-                    newState.P.pop();
-                    return newState;
-                }
-                if (splitInput.length != 1) {
-                    errors.push("Cabeça deve ter tamanho 1.");
-                }
-    
-                if (!state.V.includes(splitInput[0])) {
-                    errors.push("Cabeça deve ser variável.");
-                }
-    
-                for (let line in state.P) {
-                    if (input === state.P[line][0] && line != i) {
-                        errors.push("Cabeça deve ser única.");
+                    if(i > 0 && input === "" ) {
+                        newState.P.splice(i, 1);
+                        return newState;
                     }
-                }
-    
-                if (errors.length > 0) {
-                    throw new Error(errors.join("\n"));
-                }
-    
-                newState.P[i][j] = splitInput[0];
-                return newState;
-            //is body
-            } else {
-
-                if(input === "" && j >= 2) {
-                    newState.P[i].splice(j, 1);
-                    return newState;
-                }
-
-                if (input === "eps") {
-                    newState.P[i][j] = ['eps'];
-                    return newState;
-                }
-    
-                if (splitInput.length !== 2) {
-                    errors.push("Corpo deve ter tamanho 2.");
-                }
-    
-                if (!state.T.includes(splitInput[0])) {
-                    errors.push("Corpo deve começar com terminal válido.");
-                }
-    
-                if (!state.V.includes(splitInput[1])) {
-                    errors.push("Corpo deve terminar com variável válida.");
-                }
-                //checks if there is equal production in this ruleSet
-                for(let k in state.P[i]){
-                    if(state.P[i][k][0] == splitInput[0] &&
-                    state.P[i][k][1] == splitInput[1] &&
-                    k !== state.P[i].length){
-                        errors.push("Já existe uma produção igual para essa cabeça.");
+                    //checks if last ruleSet has a head, case no, delete ruleSet
+                    // if(i>0 && state.P[state.P.length-1][0].trim() === ""){
+                    //     newState.P.pop();
+                    //     return newState;
+                    // }
+                    if (splitInput.length != 1) {
+                        errors.push("Cabeça deve ter tamanho 1.");
                     }
-                }
-                if (errors.length > 0) {
-                    throw new Error(errors.join("\n"));
-                }
+        
+                    if (!state.V.includes(splitInput[0])) {
+                        errors.push("Cabeça deve ser variável.");
+                    }
+        
+                    for (let line in state.P) {
+                        if (input === state.P[line][0] && line != i) {
+                            errors.push("Cabeça deve ser única.");
+                        }
+                    }
+        
+                    if (errors.length > 0) {
+                        throw new Error(errors.join("\n"));
+                    }
+        
+                    newState.P[i][j] = splitInput[0];
+                    return newState;
+                //is body
+                } else {
     
-                newState.P[i][j] = [splitInput[0], splitInput[1]];
+                    if(input === "" && j >= 2) {
+                        newState.P[i].splice(j, 1);
+                        return newState;
+                    }
+    
+                    if (input === "eps") {
+                        newState.P[i][j] = ['eps'];
+                        return newState;
+                    }
+        
+                    if (splitInput.length !== 2) {
+                        errors.push("Corpo deve ter tamanho 2.");
+                    }
+        
+                    if (!state.T.includes(splitInput[0])) {
+                        errors.push("Corpo deve começar com terminal válido.");
+                    }
+        
+                    if (!state.V.includes(splitInput[1])) {
+                        errors.push("Corpo deve terminar com variável válida.");
+                    }
+                    //checks if there is equal production in this ruleSet
+                    for(let k in state.P[i]){
+                        if(state.P[i][k][0] == splitInput[0] &&
+                        state.P[i][k][1] == splitInput[1] &&
+                        k !== state.P[i].length){
+                            errors.push("Já existe uma produção igual para essa cabeça.");
+                        }
+                    }
+                    if (errors.length > 0) {
+                        throw new Error(errors.join("\n"));
+                    }
+        
+                    newState.P[i][j] = [splitInput[0], splitInput[1]];
+                    return newState;
+                }
+            } catch (error) {
+                alert(error.message);
+                event.target.value = "";
+                newState.P[i][j] = j === 0 ? "" : [""];
                 return newState;
             }
-        } catch (error) {
-            alert(error.message);
-            event.target.value = "";
-            newState.P[i][j] = j === 0 ? "" : [""];
-            return newState;
-        }
+        } 
+        return newState;
     }
 
     // updates S
@@ -177,7 +184,7 @@ export default class FormalGrammar {
     }
     // pushes new element or "rule" to a P head (an element is an array)
     addRuleSet = (state) => {
-        //verifies if last ruleSet has an head
+        //verifies if last ruleSet has a head
         if(state.P[state.P.length-1][0].trim() !== ""){
             const newState = { ...state };
             newState.P = [...newState.P, ["", ["eps"]]];
@@ -201,8 +208,8 @@ export default class FormalGrammar {
 
         let errors = [];
 
-        if(state.V.some(el => el === "")) errors.push("V inválido.");
-        if(state.T.some(el => el === ""))  errors.push("T inválido.");
+        if(state.V.every(el => el === "")) errors.push("V inválido.");
+        if(state.T.every(el => el === "")) errors.push("T inválido.");
 
         for (let i in state.P) {
             if(state.P[i].some(el => el === "" || el[0] == "")) errors.push("P inválido");
