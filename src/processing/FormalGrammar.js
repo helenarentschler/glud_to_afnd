@@ -4,6 +4,14 @@ export default class FormalGrammar {
 
     constructor() {
         this.base = new Grammar();
+        this.base.V = ["S","A","B"];
+        this.base.T = ["a","b"];
+        this.base.P= [
+            ["S",["a","A"]],
+            ["A",["b","B"],["eps"],],
+            ["B",["a","A"]]
+        ];
+        this.base.S = "S";
     }
 
     reducer = (state, action) => {
@@ -67,13 +75,17 @@ export default class FormalGrammar {
                     newState.P.splice(i, 1);
                     return newState;
                 }
-
+                //checks if last ruleSet has a head, case no, delete ruleSet
+                if(i>0 && state.P[state.P.length-1][0].trim() === ""){
+                    newState.P.pop();
+                    return newState;
+                }
                 if (splitInput.length != 1) {
                     errors.push("Cabeça deve ter tamanho 1");
                 }
     
                 if (!state.V.includes(splitInput[0])) {
-                    errors.push("Cabeça deve ser variavel");
+                    errors.push("Cabeça deve ser variável");
                 }
     
                 for (let line in state.P) {
@@ -134,7 +146,7 @@ export default class FormalGrammar {
         const newState = { ...state };
 
         if (!state.V.includes(event.target.value)) {
-            alert("Deve ser variavel");
+            alert("Deve ser variável");
             event.target.value = "";
             return newState;
         }
@@ -152,18 +164,14 @@ export default class FormalGrammar {
     }
 
     // pushes new element or "rule" to a P head (an element is an array)
-    addRule = (state, i) => {
-        const newState = { ...state };
-        newState.P[i] = [...newState.P[i], [""]];
-        return newState;
-    }
-
-    // pushes new line or "ruleset" to P array 
-    //(an element is an array with a string as head and an array as body)
     addRuleSet = (state) => {
-        const newState = { ...state };
-        newState.P = [...newState.P, ["", [""]]];
-        return newState;
+        //verifies if last ruleSet has an head
+        if(state.P[state.P.length-1][0].trim() !== ""){
+            const newState = { ...state };
+            newState.P = [...newState.P, ["", ["eps"]]];
+            return newState;
+        }
+        return state;
     }
  
     checkInput = (state, set) => {
@@ -181,14 +189,14 @@ export default class FormalGrammar {
 
         let errors = [];
 
-        if(state.V.some(el => el === "")) errors.push("V invalido");
-        if(state.T.some(el => el === ""))  errors.push("T invalido");
+        if(state.V.some(el => el === "")) errors.push("V inválido");
+        if(state.T.some(el => el === ""))  errors.push("T inválido");
 
         for (let i in state.P) {
-            if(state.P[i].some(el => el === "" || el[0] == "")) errors.push("P invalido");
+            if(state.P[i].some(el => el === "" || el[0] == "")) errors.push("P inválido");
         }
 
-        if(state.S === "") errors.push("S invalido");
+        if(state.S === "") errors.push("S inválido");
 
         if (errors.length > 0) {
             throw new Error(errors.join("\n"));
