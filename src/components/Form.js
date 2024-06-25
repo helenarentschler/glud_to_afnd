@@ -95,7 +95,7 @@ const Form = ({ setGlobalGrammar }) => {
                             onBlur={(event) => handleBlurP(i, 0, event)} 
                             autoFocus= {G.P[i].length <= 2}
                         />
-                        <span> ⭢ </span>
+                        <span className="seta"> &#8594; </span>
                         <div>
                             {rule.slice(1).map((el, j) => (
                                 <input 
