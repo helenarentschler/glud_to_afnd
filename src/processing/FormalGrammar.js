@@ -65,6 +65,10 @@ export default class FormalGrammar {
     // updates V or T element
     updateSet = (state, set, i, event) => {
         const newState = { ...state };
+        if (event.target.value === "") {
+            newState[set].splice(i, 1);
+            return newState;
+        }
         newState[set][i] = event.target.value;
         return newState;
     }
