@@ -14,6 +14,7 @@ const Form = ({ setGlobalGrammar }) => {
     
     function handleChange(set, i, event) {
         dispatchG({ type: 'updateSet',  payload: { set, i, event }});
+        setCheckedG(formalGrammar.updateSet(checkedG, set, i, event));
     }
 
     function handleChangeP(i, j, event) {
@@ -22,6 +23,7 @@ const Form = ({ setGlobalGrammar }) => {
 
     function handleChangeS(event) {
         dispatchG({ type: 'updateS', payload: { event }});
+        setCheckedG(formalGrammar.updateS(checkedG, event));
     }
 
     function handleAdd(set) {
@@ -54,7 +56,6 @@ const Form = ({ setGlobalGrammar }) => {
     }
 
     function handleBlurP(i, j, event) {
-        console.log(event.target.value)
         let finalG = formalGrammar.verifyProductions(checkedG, G, i, j, event.target.value);
         setCheckedG(finalG);
     }

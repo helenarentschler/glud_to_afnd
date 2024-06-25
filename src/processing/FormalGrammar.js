@@ -67,8 +67,15 @@ export default class FormalGrammar {
         const newState = { ...state };
         if (event.target.value === "") {
             newState[set].splice(i, 1);
+
+            // for (let i in newState.P) {
+            //     if(!newState[set].includes(newState.P[i][0])){
+            //         newState.P.splice(i, 1);
+            //     }
+            // }
             return newState;
         }
+        
         newState[set][i] = event.target.value;
         return newState;
     }
