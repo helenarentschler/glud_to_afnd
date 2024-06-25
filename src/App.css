@@ -37,7 +37,6 @@ input{
     justify-content: space-between;
 }
 .diagrama{
-    min-width: 500px;
     min-height: 300px;
     margin-left: 10px;
     margin-right: 10px;
@@ -52,14 +51,19 @@ input{
 }
 
 .sobre{
-    width: 600px;
-    min-width: 600px;
+    max-width: 600px;
     font-size: 16px;
+}
+.sobre div {
+    padding: 10px;
 }
 .sobre p,li{
     text-align: justify;
     font-size: 18px;
     line-height: 23px;
+}
+.sobre h2, h3 {
+    margin-bottom: 10px;
 }
 .submit{
     width: 200px;
