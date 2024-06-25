@@ -1,12 +1,10 @@
 export default class Grammar {
     V; T; P; S;
 
-    constructor() {
-        this.V = [""];
-        this.T = [""];
-        this.P = [
-            ["",[""]]
-        ];
-        this.S = "";
+    constructor(V, T, P, S) {
+        this.V = V;
+        this.T = T;
+        this.P = P;
+        this.S = S;
     }
 }

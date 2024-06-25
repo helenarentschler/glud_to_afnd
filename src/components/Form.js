@@ -1,26 +1,31 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import FormalGrammar from "../processing/FormalGrammar";
 
-const Form = ({ setGrammar }) => {
+const Form = ({ setGlobalGrammar }) => {
 
     const formalGrammar = new FormalGrammar();
 
-    const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.base);
+    const [ G, dispatchG ] = useReducer(formalGrammar.reducer, formalGrammar.baseView);
+    const [ checkedG, setCheckedG ] = useState(formalGrammar.baseChecked);
 
     useEffect(() => {
-        setGrammar(G);
+        setGlobalGrammar(checkedG);
     }, []);
     
     function handleChange(set, i, event) {
         dispatchG({ type: 'updateSet',  payload: { set, i, event }});
     }
 
-    function handleAdd(set) {
-        dispatchG({ type: 'addSetElement',  payload: { set }});
+    function handleChangeP(i, j, event) {
+        dispatchG({ type: 'updateProduction',  payload: { i, j, event }});
     }
 
-    function handleBlurP(i, j, event) {
-        dispatchG({ type: 'verifyProductions',  payload: { i, j, event }});
+    function handleChangeS(event) {
+        dispatchG({ type: 'updateS', payload: { event }});
+    }
+
+    function handleAdd(set) {
+        dispatchG({ type: 'addSetElement',  payload: { set }});
     }
 
     function handleAddRule(i) {
@@ -31,26 +36,28 @@ const Form = ({ setGrammar }) => {
         dispatchG({ type: 'addRuleSet'});
     }
 
-    function handleChangeS(event) {
-        dispatchG({ type: 'updateS', payload: { event }});
-    }
-
     function handleSubmit(event) {
-        
+
         event.preventDefault();
-        
         try {
             formalGrammar.checkGrammarSubmit(G);
-            setGrammar(G);
+            console.log(checkedG);
+            setGlobalGrammar(checkedG);
         } catch (error) {
             alert(error.message);
         }
+      
     }
 
     function handleBlur(set) {
         dispatchG({ type: 'checkInput', payload: { set }});
     }
 
+    function handleBlurP(i, j, event) {
+        console.log(event.target.value)
+        let finalG = formalGrammar.verifyProductions(checkedG, G, i, j, event.target.value);
+        setCheckedG(finalG);
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -73,12 +80,14 @@ const Form = ({ setGrammar }) => {
                 </div>
             ))}
             <div id="P">
-                <span>P: {"{"}</span>
+                <span>P: {"{"}</span> 
+                <div>
                 {G.P.map((rule, i) => (
                     <div className="rule" key={i}>
                         <input 
                             type="text" 
-                            defaultValue={rule[0]} 
+                            value={rule[0]} 
+                            onChange={(event) => handleChangeP(i, 0, event)}
                             onBlur={(event) => handleBlurP(i, 0, event)} 
                             autoFocus= {G.P[i].length <= 2}
                         />
@@ -88,7 +97,8 @@ const Form = ({ setGrammar }) => {
                                 <input 
                                     type="text" 
                                     key={j + 1} 
-                                    defaultValue={el.join(" ")} 
+                                    value={el} 
+                                    onChange={(event) => handleChangeP(i, j + 1, event)}
                                     onBlur={(event) => handleBlurP(i, j + 1, event)} 
                                     autoFocus={
                                         G.P[i].length > 2  &&
@@ -100,6 +110,7 @@ const Form = ({ setGrammar }) => {
                         <button type="button" onClick={() => handleAddRule(i)}>+</button>
                     </div>
                 ))}
+                </div>
                 <button type="button" onClick={handleAddRuleSet}>+</button>
                 {"}"}
             </div>

@@ -26,7 +26,7 @@ function App() {
         <h1>Conversor de Gramática Regular para Autômato - GLUD para AFND-&#949;</h1>
       </div>
       <div className="container">
-        <Form setGrammar={setGrammar}/>
+        <Form setGlobalGrammar={setGrammar}/>
         <Sobre/> 
       </div>
       <hr></hr>
