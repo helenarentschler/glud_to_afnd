@@ -28,14 +28,17 @@ const Form = ({ setGlobalGrammar }) => {
 
     function handleAdd(set) {
         dispatchG({ type: 'addSetElement',  payload: { set }});
+        setCheckedG(formalGrammar.addSetElement(checkedG, set));
     }
 
     function handleAddRule(i) {
         dispatchG({ type: 'addRule',  payload: { i }});
+        setCheckedG(formalGrammar.addRule(checkedG, i));
     }
 
     function handleAddRuleSet() {
         dispatchG({ type: 'addRuleSet'});
+        setCheckedG(formalGrammar.addRuleSet(checkedG));
     }
 
     function handleSubmit(event) {
