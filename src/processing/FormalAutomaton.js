@@ -11,7 +11,6 @@ export default class FormalAutomaton {
 
     createTransitionFunction(P) {
         let transitions = {};
-
         P.forEach(rule => {
             let [state, ...productions] = rule;
             productions.forEach(production => {
@@ -32,6 +31,9 @@ export default class FormalAutomaton {
     parseProduction(production) {
         if (production == "eps") {
             return ["eps", "qf"]; // 'eps' transitions to a final state 'qf'
+        }
+        if (production.length == 1) {
+            return [production, "qf"]; // 'eps' transitions to a final state 'qf'
         }
         let symbol = production[0];
         let nextState = production.slice(1);
@@ -65,7 +67,6 @@ export default class FormalAutomaton {
         dot += `
             }
         `;
-
         return dot;
     }
 }

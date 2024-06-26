@@ -22,9 +22,9 @@ function App() {
 
   return (
     <div className="App">
-      <div className="header">
+      <header>
         <h1>Conversor de Gramática Regular para Autômato - GLUD para AFND-&#949;</h1>
-      </div>
+      </header>
       <div className="container">
         <Form setGlobalGrammar={setGrammar}/>
         <Sobre/> 
@@ -32,6 +32,14 @@ function App() {
       <hr></hr>
         <FormalDef automaton={automaton}/>
         <Diagram automaton={automaton}/>
+        <footer>
+        <div>
+          Desenvolvido com <a href="https://react.dev/">React.js</a>, <a href="https://nodejs.org/">Node.js</a> and <a href="https://viz-js.com">Viz.js</a>
+        </div>
+        <div>
+          Criado por <a href="https://github.com/helenarentschler">Helena Rentschler</a> e <a href="https://github.com/alessipg">Gabriel Alessi Posonski</a>. Código-fonte disponível no <a href="https://github.com/helenarentschler/glud_to_afnd">Github.</a>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -46,7 +46,6 @@ const Form = ({ setGlobalGrammar }) => {
         event.preventDefault();
         try {
             formalGrammar.checkGrammarSubmit(G);
-            console.log(checkedG);
             setGlobalGrammar(checkedG);
         } catch (error) {
             alert(error.message);
