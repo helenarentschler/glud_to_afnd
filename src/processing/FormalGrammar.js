@@ -139,7 +139,7 @@ export default class FormalGrammar {
 
                 for (let k in state.P[i]) {
                     if (state.P[i][k][0] == input &&
-                        k != j) {
+                        k != j && k != 0) {
                         throw new Error("Já existe uma produção igual para essa cabeça.");
                     }
                 }
@@ -151,9 +151,13 @@ export default class FormalGrammar {
                 if (splitInput.length > 2) {
                     errors.push("Corpo deve ter tamanho 2.");
                 }
-
                 if (!state.T.includes(splitInput[0])) {
-                    errors.push("Corpo deve começar com terminal válido.");
+                    if(!splitInput[1]){
+                        if (!state.V.includes(splitInput[0])){
+                            errors.push("Corpo deve ser uma variável válida");
+                        }
+                    }else
+                        errors.push("Corpo deve começar com terminal válido.");
                 }
                 
                 if (splitInput[1] && !state.V.includes(splitInput[1])) {
@@ -163,7 +167,7 @@ export default class FormalGrammar {
                 for (let k in state.P[i]) {
                     if (state.P[i][k][0] == splitInput[0] &&
                         state.P[i][k][1] == splitInput[1] &&
-                        k != j) {
+                        k != j && k != 0) {
                         errors.push("Já existe uma produção igual para essa cabeça.");
                     }
                 }
