@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/glud_to_afnd/static/css/main.138f727f.css",
-    "main.js": "/glud_to_afnd/static/js/main.58f4b2f5.js",
+    "main.js": "/glud_to_afnd/static/js/main.eac7ee29.js",
     "index.html": "/glud_to_afnd/index.html",
     "main.138f727f.css.map": "/glud_to_afnd/static/css/main.138f727f.css.map",
-    "main.58f4b2f5.js.map": "/glud_to_afnd/static/js/main.58f4b2f5.js.map"
+    "main.eac7ee29.js.map": "/glud_to_afnd/static/js/main.eac7ee29.js.map"
   },
   "entrypoints": [
     "static/css/main.138f727f.css",
-    "static/js/main.58f4b2f5.js"
+    "static/js/main.eac7ee29.js"
   ]
 }
