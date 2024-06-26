@@ -148,15 +148,15 @@ export default class FormalGrammar {
                     return newState;
                 }
 
-                if (splitInput.length !== 2) {
+                if (splitInput.length > 2) {
                     errors.push("Corpo deve ter tamanho 2.");
                 }
 
                 if (!state.T.includes(splitInput[0])) {
                     errors.push("Corpo deve começar com terminal válido.");
                 }
-
-                if (!state.V.includes(splitInput[1])) {
+                
+                if (splitInput[1] && !state.V.includes(splitInput[1])) {
                     errors.push("Corpo deve terminar com variável válida.");
                 }
                 //checks if there is equal production in this ruleSet
@@ -170,7 +170,11 @@ export default class FormalGrammar {
                 if (errors.length > 0) {
                     throw new Error(errors.join("\n"));
                 }
-                newState.P[i][j] = [splitInput[0], splitInput[1]];
+                if(!splitInput[1]){
+                    newState.P[i][j] = [splitInput[0]];
+                }else{
+                    newState.P[i][j] = [splitInput[0], splitInput[1]];
+                }
                 return newState;
             }
         } catch (error) {
