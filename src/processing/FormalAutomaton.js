@@ -33,7 +33,10 @@ export default class FormalAutomaton {
             return ["eps", "qf"]; // 'eps' transitions to a final state 'qf'
         }
         if (production.length == 1) {
-            return [production, "qf"]; // 'eps' transitions to a final state 'qf'
+            if(this.states.includes(production[0])){
+                return ["eps",production];
+            }else
+                return [production, "qf"]; // 'eps' transitions to a final state 'qf'
         }
         let symbol = production[0];
         let nextState = production.slice(1);
